@@ -1,14 +1,17 @@
-from sqlalchemy import Boolean, Column, String, Table
+from sqlalchemy import Boolean, Column, ForeignKey, String, Table
 from sqlalchemy.orm import relationship
-
 from src.infrastructure.database.base import Base
-
 
 role_permissions_table = Table(
     "role_permissions",
     Base.metadata,
-    Column("role_id", String, primary_key=True),
-    Column("permission_id", String, primary_key=True),
+    Column("role_id", String, ForeignKey("roles.id", ondelete="CASCADE"), primary_key=True),
+    Column(
+        "permission_id",
+        String,
+        ForeignKey("permissions.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
 )
 
 

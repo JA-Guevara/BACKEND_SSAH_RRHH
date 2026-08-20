@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class TokenService(ABC):
@@ -7,9 +8,13 @@ class TokenService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def create_refresh_token(self, subject: str) -> str:
+    def create_refresh_token(self, subject: str) -> tuple[str, str, datetime]:
         raise NotImplementedError
 
     @abstractmethod
-    def decode_token(self, token: str) -> dict:
+    def decode_token(self, token: str, expected_type: str) -> dict[str, object]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def fingerprint(self, token: str) -> str:
         raise NotImplementedError

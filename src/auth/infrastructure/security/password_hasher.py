@@ -1,14 +1,17 @@
-from passlib.context import CryptContext
-
+import bcrypt
+from src.auth.domain.exceptions import InvalidPasswordError
 from src.auth.ports.outgoing.password_hasher import PasswordHasher
 
 
 class BcryptPasswordHasher(PasswordHasher):
-    def __init__(self):
-        self._context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
     def hash(self, password: str) -> str:
-        return self._context.hash(password)
+        password_bytes = password.encode("utf-8")
+        if len(password_bytes) > 72:
+            raise InvalidPasswordError("La contraseña no puede superar 72 bytes")
+        return bcrypt.hashpw(password_bytes, bcrypt.gensalt()).decode("utf-8")
 
     def verify(self, password: str, hashed_password: str) -> bool:
-        return self._context.verify(password, hashed_password)
+        try:
+            return bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8"))
+        except (ValueError, TypeError):
+            return False

@@ -12,3 +12,19 @@ class InvalidCredentialsError(AuthError):
 
 class TokenExpiredError(AuthError):
     pass
+
+
+class InvalidTokenError(AuthError):
+    pass
+
+
+class InactiveUserError(AuthError):
+    pass
+
+
+class UserNotFoundError(AuthError):
+    pass
+
+
+class InvalidPasswordError(AuthError):
+    pass
