@@ -171,7 +171,9 @@ async def forgot_password(
     ).execute(str(request.email))
     return {
         "message": "Si el correo existe, se generó un enlace de recuperación",
-        "reset_token": raw_token if settings.app_debug else None,
+        "reset_token": raw_token
+        if settings.app_env == "development" and settings.app_debug
+        else None,
     }
 
 

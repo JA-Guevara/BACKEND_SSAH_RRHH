@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_env: str = "development"
-    app_debug: bool = True
+    app_debug: bool = False
     app_secret_key: str = "change-me-in-production"
     app_algorithm: str = "HS256"
     app_access_token_expire_minutes: int = 60
@@ -16,8 +16,9 @@ class Settings(BaseSettings):
     @classmethod
     def validate_database_url(cls, value: str) -> str:
         """Adapta la URL estándar de PostgreSQL al driver asíncrono de SQLAlchemy."""
-        if value.startswith("postgresql://"):
-            return value.replace("postgresql://", "postgresql+psycopg://", 1)
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                return value.replace(prefix, "postgresql+psycopg://", 1)
         if value.startswith("postgresql+psycopg://"):
             return value
         raise ValueError(
